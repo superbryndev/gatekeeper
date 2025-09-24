@@ -1,0 +1,66 @@
+{
+  "name": "@superbryn/gatekeeper",
+  "version": "1.0.0",
+  "description": "Client-side bot and fraud detection for voice AI apps. Easy integration for React & vanilla JS applications.",
+  "type": "module",
+  "main": "dist/gatekeeper.umd.cjs",
+  "module": "dist/gatekeeper.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/gatekeeper.es.js",
+      "require": "./dist/gatekeeper.umd.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./script": {
+      "import": "./dist/gatekeeper-script.js",
+      "require": "./dist/gatekeeper-script.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "NPM_PUBLISHING.md"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run build:lib && npm run build:script",
+    "build:lib": "vite build",
+    "build:script": "vite build --config vite.script.config.ts",
+    "dev:react": "vite --config vite.example.config.ts",
+    "build:react": "vite build --config vite.example.config.ts",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview",
+    "prepublishOnly": "npm run typecheck && npm run build"
+  },
+  "keywords": [
+    "fraud-detection",
+    "bot-detection",
+    "fingerprinting",
+    "voice-ai",
+    "browser-security",
+    "client-side-detection",
+    "phone-validation",
+    "risk-assessment"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/superbryndev/gatekeeper#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/superbryndev/gatekeeper.git"
+  },
+  "bugs": {
+    "url": "https://github.com/superbryndev/gatekeeper/issues"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.13",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.3",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.8",
+    "vite-plugin-dts": "^4.2.3"
+  }
+}

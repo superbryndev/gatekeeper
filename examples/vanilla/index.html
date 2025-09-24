@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gatekeeper Vanilla Example</title>
+  </head>
+  <body>
+    <h1>Gatekeeper Vanilla Example</h1>
+    <label>
+      Phone Number:
+      <input id="phone" type="tel" placeholder="+15551234567" />
+    </label>
+    <button id="submit">Submit</button>
+
+    <h3>Collected Client Data</h3>
+    <pre id="client"></pre>
+    <h3>API Result</h3>
+    <pre id="out"></pre>
+    <!-- No global overrides; use library defaults -->
+    <script type="module">
+      // In a plain HTML example without a bundler, import the built ESM from dist
+      // For dev with a bundler (e.g., Vite), import from '../../src/index.ts' instead.
+      import { GateKeeper } from '../../dist/gatekeeper.es.js';
+      const out = document.getElementById('out');
+      const client = document.getElementById('client');
+      const phone = document.getElementById('phone');
+      const submit = document.getElementById('submit');
+
+      // Enable debug mode for placeholder JWT
+      window.__GATEKEEPER_DEBUG__ = true;
+      // In debug mode, any string will be ignored and a placeholder JWT will be used
+      const detector = new GateKeeper('any-string-will-be-ignored-in-debug-mode');
+
+      submit.addEventListener('click', async () => {
+        out.textContent = 'Loading...';
+        client.textContent = 'Collecting...';
+        try {
+          const d = await detector.collectClientData();
+          client.textContent = JSON.stringify(d, null, 2);
+          const number = (phone && 'value' in phone) ? phone.value : '+1234567890';
+          const r = await detector.checkPhoneNumber(number || '+1234567890');
+          out.textContent = JSON.stringify(r, null, 2);
+        } catch (e) {
+          out.textContent = String(e);
+        }
+      });
+    </script>
+  </body>
+  </html>
+
+
