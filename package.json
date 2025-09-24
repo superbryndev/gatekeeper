@@ -1,6 +1,9 @@
 {
   "name": "@superbryn/gatekeeper",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Client-side bot and fraud detection for voice AI apps. Easy integration for React & vanilla JS applications.",
   "type": "module",
   "main": "dist/gatekeeper.umd.cjs",
@@ -19,8 +22,7 @@
   },
   "files": [
     "dist",
-    "README.md",
-    "NPM_PUBLISHING.md"
+    "README.md"
   ],
   "scripts": {
     "dev": "vite",
