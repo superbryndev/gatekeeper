@@ -19,13 +19,13 @@ Gatekeeper is a powerful, lightweight library that helps protect your voice AI a
 ### NPM Package (Recommended)
 
 ```bash
-npm install @yourorg/gatekeeper
+npm install @superbryn/gatekeeper
 ```
 
 ### CDN/Script Tag (Vanilla JS)
 
 ```html
-<script src="https://unpkg.com/@yourorg/gatekeeper@latest/dist/gatekeeper-script.js"></script>
+<script src="https://unpkg.com/@superbryn/gatekeeper@latest/dist/gatekeeper-script.js"></script>
 ```
 
 ## Quick Start
@@ -33,7 +33,7 @@ npm install @yourorg/gatekeeper
 ### React/Modern JavaScript
 
 ```javascript
-import { GateKeeper } from '@yourorg/gatekeeper';
+import { GateKeeper } from '@superbryn/gatekeeper';
 
 // Initialize with your API key
 const gatekeeper = new GateKeeper('your-api-key-here');
@@ -71,7 +71,7 @@ const isPhoneSafe = await checkPhone(phoneNumber);
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="https://unpkg.com/@yourorg/gatekeeper@latest/dist/gatekeeper-script.js"></script>
+  <script src="https://unpkg.com/@superbryn/gatekeeper@latest/dist/gatekeeper-script.js"></script>
 </head>
 <body>
   <script>
@@ -121,7 +121,7 @@ const isPhoneSafe = await checkPhone(phoneNumber);
 ```javascript
 // Note: This is primarily a client-side library
 // Server-side usage is limited due to browser-specific fingerprinting
-const { GateKeeper } = require('@yourorg/gatekeeper');
+const { GateKeeper } = require('@superbryn/gatekeeper');
 
 const gatekeeper = new GateKeeper('your-api-key-here');
 
@@ -252,7 +252,7 @@ async function safePhoneCheck(phoneNumber) {
 ### With VAPI (Voice AI)
 
 ```javascript
-import { GateKeeper } from '@yourorg/gatekeeper';
+import { GateKeeper } from '@superbryn/gatekeeper';
 
 const gatekeeper = new GateKeeper('your-api-key');
 
@@ -292,7 +292,7 @@ async function makeVAPICall(phoneNumber, assistantId) {
 
 ```javascript
 import { useState, useCallback } from 'react';
-import { GateKeeper } from '@yourorg/gatekeeper';
+import { GateKeeper } from '@superbryn/gatekeeper';
 
 const gatekeeper = new GateKeeper(process.env.REACT_APP_GATEKEEPER_API_KEY);
 
@@ -424,7 +424,7 @@ In debug mode:
 Full TypeScript support is included:
 
 ```typescript
-import { GateKeeper, FraudDetectionResponseInterface } from '@yourorg/gatekeeper';
+import { GateKeeper, FraudDetectionResponseInterface } from '@superbryn/gatekeeper';
 
 const gatekeeper = new GateKeeper('your-api-key');
 
@@ -441,7 +441,7 @@ We welcome contributions! Please see our contributing guidelines for more inform
 
 - 📧 Email: support@gatekeeper.ai
 - 📖 Documentation: https://docs.gatekeeper.ai
-- 🐛 Issues: https://github.com/yourorg/gatekeeper/issues
+- 🐛 Issues: https://github.com/superbryn/gatekeeper/issues
 
 ## License
 

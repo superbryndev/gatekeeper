@@ -140,3 +140,6 @@ desktop.ini
 
 # Project-specific files to ignore
 NPM_PUBLISHING.md
+
+# Hotel contact form subdirectory
+hotel-contact-form/
