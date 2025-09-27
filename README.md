@@ -40,24 +40,18 @@ const gatekeeper = new GateKeeper('your-api-key-here');
 
 // Check a phone number for fraud
 async function checkPhone(phoneNumber) {
-  try {
-    const result = await gatekeeper.checkPhoneNumber(phoneNumber);
-    
-    console.log('Fraud Score:', result.fraudScore); // 0-100
-    console.log('Risk Level:', result.riskLevel);   // low, medium, high, critical
-    console.log('Action:', result.action);         // allow, challenge, block
-    
-    if (result.action === 'block') {
-      alert('This phone number has been flagged as high risk');
-      return false;
-    }
-    
-    return true;
-  } catch (error) {
-    console.error('Fraud check failed:', error.message);
-    // Handle error appropriately
-    return true; // Fail open - allow the call to proceed
+  const result = await gatekeeper.checkPhoneNumber(phoneNumber);
+  
+  console.log('Fraud Score:', result.fraudScore); // 0-100
+  console.log('Risk Level:', result.riskLevel);   // low, medium, high, critical
+  console.log('Action:', result.action);         // allow, challenge, block
+  
+  if (result.action === 'block') {
+    alert('This phone number has been flagged as high risk');
+    return false;
   }
+  
+  return true;
 }
 
 // Usage in your app
@@ -247,101 +241,6 @@ async function safePhoneCheck(phoneNumber) {
 }
 ```
 
-## Integration Examples
-
-### With VAPI (Voice AI)
-
-```javascript
-import { GateKeeper } from '@superbryn/gatekeeper';
-
-const gatekeeper = new GateKeeper('your-api-key');
-
-async function makeVAPICall(phoneNumber, assistantId) {
-  // Check phone number first
-  const fraudCheck = await gatekeeper.checkPhoneNumber(phoneNumber);
-  
-  if (fraudCheck.action === 'block') {
-    throw new Error('Phone number blocked due to fraud risk');
-  }
-  
-  if (fraudCheck.action === 'challenge') {
-    // Implement additional verification before proceeding
-    const verified = await showAdditionalVerification();
-    if (!verified) {
-      throw new Error('Additional verification failed');
-    }
-  }
-  
-  // Proceed with VAPI call
-  const vapiCall = await vapi.call({
-    phoneNumber,
-    assistantId,
-    // Include fraud score in metadata for analytics
-    metadata: {
-      fraudScore: fraudCheck.fraudScore,
-      riskLevel: fraudCheck.riskLevel,
-      requestId: fraudCheck.requestId
-    }
-  });
-  
-  return vapiCall;
-}
-```
-
-### With React Hook
-
-```javascript
-import { useState, useCallback } from 'react';
-import { GateKeeper } from '@superbryn/gatekeeper';
-
-const gatekeeper = new GateKeeper(process.env.REACT_APP_GATEKEEPER_API_KEY);
-
-export function usePhoneFraudCheck() {
-  const [isChecking, setIsChecking] = useState(false);
-  const [lastResult, setLastResult] = useState(null);
-  
-  const checkPhone = useCallback(async (phoneNumber) => {
-    setIsChecking(true);
-    try {
-      const result = await gatekeeper.checkPhoneNumber(phoneNumber);
-      setLastResult(result);
-      return result;
-    } catch (error) {
-      console.error('Fraud check failed:', error);
-      throw error;
-    } finally {
-      setIsChecking(false);
-    }
-  }, []);
-  
-  return { checkPhone, isChecking, lastResult };
-}
-
-// Usage in component
-function CallButton({ phoneNumber }) {
-  const { checkPhone, isChecking } = usePhoneFraudCheck();
-  
-  const handleCall = async () => {
-    try {
-      const result = await checkPhone(phoneNumber);
-      if (result.action === 'allow') {
-        // Make the call
-        console.log('Making call...');
-      } else {
-        alert(`Call blocked: ${result.riskLevel} risk detected`);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
-  
-  return (
-    <button onClick={handleCall} disabled={isChecking}>
-      {isChecking ? 'Checking...' : 'Make Call'}
-    </button>
-  );
-}
-```
 
 ## Data Collection
 
@@ -385,10 +284,6 @@ Gatekeeper collects the following client-side data for fraud analysis:
 - Verify the API endpoint is accessible
 - Consider implementing retry logic for network issues
 
-**High fraud scores for legitimate users**
-- Review your fraud threshold settings
-- Check if users are on VPNs or corporate networks
-- Consider implementing a feedback mechanism to improve accuracy
 
 **CORS errors**
 - Ensure your domain is whitelisted in your Gatekeeper dashboard
@@ -433,15 +328,101 @@ async function checkPhone(phone: string): Promise<FraudDetectionResponseInterfac
 }
 ```
 
+## Integration Examples
+
+### VAPI Integration
+
+```javascript
+import { GateKeeper } from '@superbryn/gatekeeper';
+import Vapi from '@vapi-ai/web-sdk';
+
+const gatekeeper = new GateKeeper('gk-YOUR-API-KEY');
+const vapi = new Vapi('vapi-YOUR-API-KEY');
+
+async function makeProtectedCall(phoneNumber, assistantId) {
+  const fraudCheck = await gatekeeper.checkPhoneNumber(phoneNumber);
+  
+  if (fraudCheck.action === 'challenge') {
+    console.log('Additional verification required');
+  }
+  
+  const call = await vapi.call({
+    phoneNumber,
+    assistantId,
+    metadata: {
+      fraudScore: fraudCheck.fraudScore,
+      riskLevel: fraudCheck.riskLevel
+    }
+  });
+  
+  return call;
+}
+```
+
+### LiveKit Integration
+
+```javascript
+import { GateKeeper } from '@superbryn/gatekeeper';
+import { OutboundCall } from '@livekit/outbound';
+
+const gatekeeper = new GateKeeper('gk-YOUR-API-KEY');
+const outboundCall = new OutboundCall({
+  apiKey: 'lk-YOUR-API-KEY',
+  apiSecret: 'lk-YOUR-SECRET',
+  livekitUrl: 'wss://your-livekit-server.com'
+});
+
+async function makeOutboundCall(phoneNumber, agentConfig) {
+  const fraudCheck = await gatekeeper.checkPhoneNumber(phoneNumber);
+  
+  const call = await outboundCall.createCall({
+    phoneNumber,
+    agentConfig: {
+      ...agentConfig,
+      metadata: {
+        fraudScore: fraudCheck.fraudScore,
+        riskLevel: fraudCheck.riskLevel
+      }
+    }
+  });
+  
+  return call;
+}
+```
+
+### Retell Integration
+
+```javascript
+import { GateKeeper } from '@superbryn/gatekeeper';
+
+const gatekeeper = new GateKeeper('gk-YOUR-API-KEY');
+
+async function makeRetellCall(phoneNumber, agentId) {
+  const fraudCheck = await gatekeeper.checkPhoneNumber(phoneNumber);
+  
+  const response = await fetch('https://api.retellai.com/create-phone-call', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.RETELL_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      phone_number: phoneNumber,
+      agent_id: agentId,
+      metadata: {
+        fraudScore: fraudCheck.fraudScore,
+        riskLevel: fraudCheck.riskLevel
+      }
+    })
+  });
+  
+  return response.json();
+}
+```
+
 ## Contributing
 
 We welcome contributions! Please see our contributing guidelines for more information.
-
-## Support
-
-- 📧 Email: support@gatekeeper.ai
-- 📖 Documentation: https://docs.gatekeeper.ai
-- 🐛 Issues: https://github.com/superbryn/gatekeeper/issues
 
 ## License
 
