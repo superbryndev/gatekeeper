@@ -16,7 +16,7 @@ Gatekeeper is a powerful, lightweight library that helps protect your voice AI a
 
 ## Installation
 
-[![Integrating gatekeeper to your outbound agent](https://img.youtube.com/vi/49zP7QRdQhQ/0.jpg)](https://www.youtube.com/watch?v=49zP7QRdQhQ)
+[![Integrating gatekeeper to your outbound agent](https://img.youtube.com/vi/49zP7QRdQhQ/maxresdefault.jpg)](https://www.youtube.com/watch?v=49zP7QRdQhQ)
 
 
 ### NPM Package (Recommended)
